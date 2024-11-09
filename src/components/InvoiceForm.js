@@ -8,6 +8,7 @@ import Card from 'react-bootstrap/Card';
 import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
+import SignaturePad from './SignaturePad';
 
 class InvoiceForm extends React.Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class InvoiceForm extends React.Component {
       notes: '',
       total: '0.00',
       subTotal: '0.00',
+      signature: '',
       taxRate: '',
       taxAmmount: '0.00',
       discountRate: '',
@@ -42,10 +44,13 @@ class InvoiceForm extends React.Component {
       }
     ];
     this.editField = this.editField.bind(this);
+    this.handleSignatureSave = this.handleSignatureSave.bind(this);
   }
   componentDidMount(prevProps) {
     this.handleCalculateTotal()
   }
+  
+  
   handleRowDel(items) {
     var index = this.state.items.indexOf(items);
     this.state.items.splice(index, 1);
@@ -121,6 +126,11 @@ class InvoiceForm extends React.Component {
     this.setState({isOpen: true})
   };
   closeModal = (event) => this.setState({isOpen: false});
+  
+  handleSignatureSave(signature) {
+    this.setState({ signature });
+  }
+
   render() {
     return (<Form onSubmit={this.openModal}>
       <Row>
@@ -199,14 +209,20 @@ class InvoiceForm extends React.Component {
               </Col>
             </Row>
             <hr className="my-4"/>
-            <Form.Label className="fw-bold">Notes:</Form.Label>
+            <Form.Label className="fw-bold">Signature:</Form.Label>
+            <SignaturePad onSave={this.handleSignatureSave} />
+            {this.state.signature && (
+                <img src={this.state.signature} alt="Signature" className="mt-2" />
+              )}
+              <hr className="my-4"/>
+              <Form.Label className="fw-bold">Notes:</Form.Label>
             <Form.Control placeholder="Thanks for your business!" name="notes" value={this.state.notes} onChange={(event) => this.editField(event)} as="textarea" className="my-2" rows={1}/>
           </Card>
         </Col>
         <Col md={4} lg={3}>
           <div className="sticky-top pt-md-3 pt-xl-4">
             <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
-            <InvoiceModal showModal={this.state.isOpen} closeModal={this.closeModal} info={this.state} items={this.state.items} currency={this.state.currency} subTotal={this.state.subTotal} taxAmmount={this.state.taxAmmount} discountAmmount={this.state.discountAmmount} total={this.state.total}/>
+            <InvoiceModal showModal={this.state.isOpen} closeModal={this.closeModal} info={this.state} items={this.state.items} currency={this.state.currency} subTotal={this.state.subTotal} taxAmmount={this.state.taxAmmount} discountAmmount={this.state.discountAmmount} total={this.state.total} signature={this.state.signature}/>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Currency:</Form.Label>
               <Form.Select onChange={event => this.onCurrencyChange({currency: event.target.value})} className="btn btn-light my-1" aria-label="Change Currency">

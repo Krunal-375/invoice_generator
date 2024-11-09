@@ -9,7 +9,7 @@ import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf'
 
-function GenerateInvoice() {
+function GenerateInvoice(info) {
   html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
     const imgData = canvas.toDataURL('image/png', 1.0);
     const pdf = new jsPDF({
@@ -22,6 +22,9 @@ function GenerateInvoice() {
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    if (info.signature) {
+      pdf.addImage(info.signature, 'PNG', 50, pdfHeight + 20, 200, 100); // Adjust position and size as needed
+    }
     pdf.save('invoice-001.pdf');
   });
 }
@@ -129,6 +132,12 @@ class InvoiceModal extends React.Component {
                 <div className="bg-light py-3 px-4 rounded">
                   {this.props.info.notes}
                 </div>}
+                {this.props.info.signature && (
+                <div className="mt-4">
+                  <h6 className="fw-bold">Signature:</h6>
+                  <img src={this.props.info.signature} alt="Signature" className="mt-2" />
+                </div>
+              )}
             </div>
           </div>
           <div className="pb-4 px-4">
