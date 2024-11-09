@@ -97,3 +97,7 @@ hr {
   border: 1px solid #000;
   margin-bottom: 10px;
 }
+.signature-buttons{
+  display: flex;
+  gap:10px;
+}
