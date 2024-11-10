@@ -22,9 +22,9 @@ const SignaturePad = ({ onSave }) => {
         penColor="black"
         canvasProps={{ width: 500, height: 200, className: 'sigCanvas' }}
       />
-      <div className="signature-buttons">
-      <Button variant="secondary" onClick={clear}>Clear</Button>
-      <Button variant="primary" onClick={save}>Save</Button>
+      <div className="signature-buttons d-flex gap-2 mt-2">
+        <Button variant="secondary" onClick={clear}>Clear</Button>
+        <Button variant="primary" onClick={save}>Save</Button>
       </div>
     </div>
   );
